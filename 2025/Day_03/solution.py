@@ -1,0 +1,63 @@
+# Solution for Day 3 of Advent of Code 2025
+from dataclasses import dataclass
+
+def solve_part_one(input_data):
+    print("Advent of Code 2025 - Day 3: Part one - Find the maximum joltage possible...")
+
+    sum_joltage = 0
+    
+    for line in input_data.strip().splitlines():
+        
+        sequence = line.strip()
+
+        first_joltage = find_max_joltage(sequence, 0, 1)
+        second_joltage = find_max_joltage(sequence, first_joltage.index + 1, 1)
+        
+        combined_joltage = int(f"{first_joltage.joltage}{second_joltage.joltage}")
+        print(f"First max: {first_joltage.joltage}, Second max: {second_joltage.joltage}, Combined: {combined_joltage}")
+        sum_joltage += combined_joltage
+    return sum_joltage
+
+
+def find_max_joltage(sequence, start_index, end_offset):
+    max_joltage = 0
+    max_index = 0
+
+    for i in range(start_index, len(sequence) - end_offset + 1):
+        current_joltage = int(sequence[i])
+        if current_joltage > max_joltage:
+            max_joltage = current_joltage
+            max_index = i
+            
+    return BatteryJoltage(max_index, max_joltage)
+
+
+@dataclass
+class BatteryJoltage:
+    index: int
+    joltage: int
+
+
+def solve_part_two(input_data):
+    print("Advent of Code 2025 - Day 3: Part two - Calculate the total joltage sum...")
+
+    sum_joltage = 0
+    amount_of_batteries = 12
+    
+    for line in input_data.strip().splitlines():
+        
+        sequence = line.strip()
+
+        batteryJoltages = []
+        start_index = 0
+
+        for _ in range(amount_of_batteries):
+            battery_joltage = find_max_joltage(sequence, start_index, amount_of_batteries - len(batteryJoltages) - 1)
+            batteryJoltages.append(battery_joltage)
+            start_index = battery_joltage.index + 1
+
+        
+        combined_joltage = int(''.join(str(b.joltage) for b in batteryJoltages))
+        sum_joltage += combined_joltage
+
+    return sum_joltage
