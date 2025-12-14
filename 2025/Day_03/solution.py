@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 
 def solve_part_one(input_data):
-    print("Advent of Code 2025 - Day 3: Find the maximum joltage possible...")
+    print("Advent of Code 2025 - Day 3: Part One - Find the maximum joltage with two batteries...")
 
     sum_joltage = 0
     
@@ -36,3 +36,27 @@ def find_max_joltage(sequence, start_index, end_offset):
 class BatteryJoltage:
     index: int
     joltage: int
+
+
+def solve_part_two(input_data):
+    print("Advent of Code 2025 - Day 3: Part Two - Find the maximum joltage with X batteries...")
+    
+    sum_joltage = 0
+    num_batteries = 12
+
+    for line in input_data.strip().splitlines():
+
+        sequence = line.strip()
+        
+        current_index = 0
+        batteries = []
+
+        for _ in range(num_batteries):
+            battery = find_max_joltage(sequence, current_index, num_batteries - len(batteries) - 1)
+            batteries.append(battery)
+            current_index = battery.index + 1
+
+        combined_joltage = "".join(str(battery.joltage) for battery in batteries)
+        sum_joltage += int(combined_joltage)
+
+    return sum_joltage
